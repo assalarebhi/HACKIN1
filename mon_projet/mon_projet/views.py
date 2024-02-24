@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from langchain_google_genai import GoogleGenerativeAI
+
 from django.contrib.auth import authenticate, login
 from .models import Child
 
@@ -48,3 +50,31 @@ class ChildInformation(APIView):
         )
 
         return Response({'message': 'Informations sur l\'enfant enregistrées avec succès.'}, status=status.HTTP_201_CREATED)
+    class generate_quiz(APIView):
+        def post(self, request) :
+         name = request.POST.get('name')
+         age = request.POST.get('age')
+         school_level = request.POST.get('school_level')
+         problems = request.POST.get('problems')
+         description = request.POST.get('description')
+
+         # Initialize the generative AI model and generate quiz
+         llm = GoogleGenerativeAI(model='gemini-pro', google_api_key="AIzaSyBfBmM8Q-Y3t3hvcxYphxBUGUS-HXG9bFg")  # Replace with your actual key
+         industry = "education"  # You can adjust the industry based on your scenario
+         question = f"What is the best way to help {name}, a {age}-year-old at {school_level} level, with {problems}? Description: {description}"
+         quiz = llm(prompt.format(industry=industry, question=question))
+
+         # Prepare quiz data
+         quiz_data = {
+            'name': name,
+            'age': age,
+            'school_level': school_level,
+            'problems': problems,
+            'description': description,
+            'quiz': quiz
+        }
+
+        # Return JSON response
+         return JsonResponse(quiz_data)
+
+      

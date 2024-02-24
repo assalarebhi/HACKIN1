@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import SignUp, SignIn
+from .views import SignUp, SignIn,generate_quiz
 from .views import ChildInformation
 
 urlpatterns = [
@@ -24,5 +24,6 @@ urlpatterns = [
     path('signup/', SignUp.as_view(), name='signup'),
     path('signin/', SignIn.as_view(), name='signin'),
     path('child-information/', ChildInformation.as_view(), name='child-information'),
+    path('genrate_quizz/',generate_quiz.as_view(),name='generate_Quiz'),
 
 ]
